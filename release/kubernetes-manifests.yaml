@@ -53,11 +53,8 @@ spec:
             command: ["/bin/grpc_health_probe", "-addr=:8080"]
         resources:
           requests:
-            cpu: 100m
-            memory: 64Mi
-          limits:
-            cpu: 200m
-            memory: 128Mi
+            cpu: 601m
+            memory: 2200Mi
 ---
 apiVersion: v1
 kind: Service
@@ -122,11 +119,8 @@ spec:
           #   value: "jaeger-collector:14268"
           resources:
             requests:
-              cpu: 100m
-              memory: 64Mi
-            limits:
-              cpu: 200m
-              memory: 128Mi
+              cpu: 601m
+              memory: 2200Mi
 ---
 apiVersion: v1
 kind: Service
@@ -182,11 +176,8 @@ spec:
         #   value: "1"
         resources:
           requests:
-            cpu: 100m
-            memory: 220Mi
-          limits:
-            cpu: 200m
-            memory: 450Mi
+            cpu: 601m
+            memory: 2200Mi
 ---
 apiVersion: v1
 kind: Service
@@ -267,11 +258,8 @@ spec:
           #   value: "jaeger-collector:14268"
           resources:
             requests:
-              cpu: 100m
-              memory: 64Mi
-            limits:
-              cpu: 200m
-              memory: 128Mi
+              cpu: 601m
+              memory: 2200Mi
 ---
 apiVersion: v1
 kind: Service
@@ -330,11 +318,8 @@ spec:
             command: ["/bin/grpc_health_probe", "-addr=:50051"]
         resources:
           requests:
-            cpu: 100m
-            memory: 64Mi
-          limits:
-            cpu: 200m
-            memory: 128Mi
+            cpu: 601m
+            memory: 2200Mi
 ---
 apiVersion: v1
 kind: Service
@@ -388,11 +373,8 @@ spec:
             command: ["/bin/grpc_health_probe", "-addr=:3550"]
         resources:
           requests:
-            cpu: 100m
-            memory: 64Mi
-          limits:
-            cpu: 200m
-            memory: 128Mi
+            cpu: 601m
+            memory: 2200Mi
 ---
 apiVersion: v1
 kind: Service
@@ -432,11 +414,8 @@ spec:
           value: "redis-cart:6379"
         resources:
           requests:
-            cpu: 200m
-            memory: 64Mi
-          limits:
-            cpu: 300m
-            memory: 128Mi
+            cpu: 601m
+            memory: 2200Mi
         readinessProbe:
           initialDelaySeconds: 15
           exec:
@@ -498,11 +477,8 @@ spec:
             command: ["/bin/grpc_health_probe", "-addr=:7000"]
         resources:
           requests:
-            cpu: 100m
-            memory: 64Mi
-          limits:
-            cpu: 200m
-            memory: 128Mi
+            cpu: 601m
+            memory: 2200Mi
 ---
 apiVersion: v1
 kind: Service
@@ -556,11 +532,8 @@ spec:
             command: ["/bin/grpc_health_probe", "-addr=:50051"]
         resources:
           requests:
-            cpu: 100m
-            memory: 64Mi
-          limits:
-            cpu: 200m
-            memory: 128Mi
+            cpu: 601m
+            memory: 2200Mi
 ---
 apiVersion: v1
 kind: Service
@@ -605,12 +578,9 @@ spec:
         - mountPath: /data
           name: redis-data
         resources:
-          limits:
-            memory: 256Mi
-            cpu: 125m
           requests:
-            cpu: 70m
-            memory: 200Mi
+            cpu: 601m
+            memory: 2200Mi
       volumes:
       - name: redis-data
         emptyDir: {}
@@ -659,11 +629,8 @@ spec:
         #   value: "jaeger-collector:14268"
         resources:
           requests:
-            cpu: 200m
-            memory: 180Mi
-          limits:
-            cpu: 300m
-            memory: 300Mi
+            cpu: 601m
+            memory: 2200Mi
         readinessProbe:
           initialDelaySeconds: 20
           periodSeconds: 15
