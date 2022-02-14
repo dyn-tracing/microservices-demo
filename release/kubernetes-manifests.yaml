@@ -33,14 +33,14 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
       - name: server
-        image: gcr.io/google-samples/microservices-demo/emailservice:v0.3.5
+        image: gcr.io/google-samples/microservices-demo/emailservice:v0.3.6
         ports:
         - containerPort: 8080
         env:
         - name: PORT
           value: "8080"
-        # - name: DISABLE_TRACING
-        #   value: "1"
+        - name: DISABLE_TRACING
+          value: "1"
         - name: DISABLE_PROFILER
           value: "1"
         readinessProbe:
@@ -85,7 +85,11 @@ spec:
       serviceAccountName: default
       containers:
         - name: server
+<<<<<<< HEAD
           image: gcr.io/google-samples/microservices-demo/checkoutservice:v0.3.5
+=======
+          image: gcr.io/google-samples/microservices-demo/checkoutservice:v0.3.6
+>>>>>>> 2df6b8305cf01533f4c8b48b014b64759ef288ad
           ports:
           - containerPort: 5050
           readinessProbe:
@@ -109,6 +113,7 @@ spec:
             value: "currencyservice:7000"
           - name: CART_SERVICE_ADDR
             value: "cartservice:7070"
+<<<<<<< HEAD
           # - name: DISABLE_STATS
           #   value: "1"
           # - name: DISABLE_TRACING
@@ -117,6 +122,16 @@ spec:
           #   value: "1"
           - name: JAEGER_SERVICE_ADDR
             value: "jaeger-collector:14268"
+=======
+          - name: DISABLE_STATS
+            value: "1"
+          - name: DISABLE_TRACING
+            value: "1"
+          - name: DISABLE_PROFILER
+            value: "1"
+          # - name: JAEGER_SERVICE_ADDR
+          #   value: "jaeger-collector:14268"
+>>>>>>> 2df6b8305cf01533f4c8b48b014b64759ef288ad
           resources:
             requests:
               cpu: 601m
@@ -152,7 +167,11 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
       - name: server
+<<<<<<< HEAD
         image: gcr.io/google-samples/microservices-demo/recommendationservice:v0.3.5
+=======
+        image: gcr.io/google-samples/microservices-demo/recommendationservice:v0.3.6
+>>>>>>> 2df6b8305cf01533f4c8b48b014b64759ef288ad
         ports:
         - containerPort: 8080
         readinessProbe:
@@ -168,12 +187,12 @@ spec:
           value: "8080"
         - name: PRODUCT_CATALOG_SERVICE_ADDR
           value: "productcatalogservice:3550"
-        # - name: DISABLE_TRACING
-        #   value: "1"
-        # - name: DISABLE_PROFILER
-        #   value: "1"
-        # - name: DISABLE_DEBUGGER
-        #   value: "1"
+        - name: DISABLE_TRACING
+          value: "1"
+        - name: DISABLE_PROFILER
+          value: "1"
+        - name: DISABLE_DEBUGGER
+          value: "1"
         resources:
           requests:
             cpu: 601m
@@ -210,7 +229,11 @@ spec:
       serviceAccountName: default
       containers:
         - name: server
+<<<<<<< HEAD
           image: gcr.io/google-samples/microservices-demo/frontend:v0.3.5
+=======
+          image: gcr.io/google-samples/microservices-demo/frontend:v0.3.6
+>>>>>>> 2df6b8305cf01533f4c8b48b014b64759ef288ad
           ports:
           - containerPort: 8080
           readinessProbe:
@@ -246,16 +269,27 @@ spec:
             value: "checkoutservice:5050"
           - name: AD_SERVICE_ADDR
             value: "adservice:9555"
-          # # ENV_PLATFORM: One of: local, gcp, aws, azure, onprem
+          # # ENV_PLATFORM: One of: local, gcp, aws, azure, onprem, alibaba
           # # When not set, defaults to "local" unless running in GKE, otherwies auto-sets to gcp 
           # - name: ENV_PLATFORM 
           #   value: "aws"
+<<<<<<< HEAD
           # - name: DISABLE_TRACING
           #   value: "1"
           # - name: DISABLE_PROFILER
           #   value: "1"
           - name: JAEGER_SERVICE_ADDR
             value: "jaeger-collector:14268"
+=======
+          - name: DISABLE_TRACING
+            value: "1"
+          - name: DISABLE_PROFILER
+            value: "1"
+          # - name: JAEGER_SERVICE_ADDR
+          #   value: "jaeger-collector:14268"
+          # - name: CYMBAL_BRANDING
+          #   value: "true"
+>>>>>>> 2df6b8305cf01533f4c8b48b014b64759ef288ad
           resources:
             requests:
               cpu: 601m
@@ -304,12 +338,22 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
       - name: server
+<<<<<<< HEAD
         image: gcr.io/google-samples/microservices-demo/paymentservice:v0.3.5
+=======
+        image: gcr.io/google-samples/microservices-demo/paymentservice:v0.3.6
+>>>>>>> 2df6b8305cf01533f4c8b48b014b64759ef288ad
         ports:
         - containerPort: 50051
         env:
         - name: PORT
           value: "50051"
+        - name: DISABLE_TRACING
+          value: "1"
+        - name: DISABLE_PROFILER
+          value: "1"
+        - name: DISABLE_DEBUGGER
+          value: "1"
         readinessProbe:
           exec:
             command: ["/bin/grpc_health_probe", "-addr=:50051"]
@@ -351,12 +395,17 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
       - name: server
+<<<<<<< HEAD
         image: gcr.io/google-samples/microservices-demo/productcatalogservice:v0.3.5
+=======
+        image: gcr.io/google-samples/microservices-demo/productcatalogservice:v0.3.6
+>>>>>>> 2df6b8305cf01533f4c8b48b014b64759ef288ad
         ports:
         - containerPort: 3550
         env:
         - name: PORT
           value: "3550"
+<<<<<<< HEAD
         # - name: DISABLE_STATS
         #   value: "1"
         # - name: DISABLE_TRACING
@@ -365,6 +414,16 @@ spec:
         #   value: "1"
         - name: JAEGER_SERVICE_ADDR
           value: "jaeger-collector:14268"
+=======
+        - name: DISABLE_STATS
+          value: "1"
+        - name: DISABLE_TRACING
+          value: "1"
+        - name: DISABLE_PROFILER
+          value: "1"
+        # - name: JAEGER_SERVICE_ADDR
+        #   value: "jaeger-collector:14268"
+>>>>>>> 2df6b8305cf01533f4c8b48b014b64759ef288ad
         readinessProbe:
           exec:
             command: ["/bin/grpc_health_probe", "-addr=:3550"]
@@ -406,7 +465,11 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
       - name: server
+<<<<<<< HEAD
         image: gcr.io/google-samples/microservices-demo/cartservice:v0.3.5
+=======
+        image: gcr.io/google-samples/microservices-demo/cartservice:v0.3.6
+>>>>>>> 2df6b8305cf01533f4c8b48b014b64759ef288ad
         ports:
         - containerPort: 7070
         env:
@@ -442,6 +505,60 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+<<<<<<< HEAD
+=======
+  name: loadgenerator
+spec:
+  selector:
+    matchLabels:
+      app: loadgenerator
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: loadgenerator
+      annotations:
+        sidecar.istio.io/rewriteAppHTTPProbers: "true"
+    spec:
+      serviceAccountName: default
+      terminationGracePeriodSeconds: 5
+      restartPolicy: Always
+      initContainers:
+      - command:
+        - /bin/sh
+        - -exc
+        - |
+          echo "Init container pinging frontend: ${FRONTEND_ADDR}..."
+          STATUSCODE=$(wget --server-response http://${FRONTEND_ADDR} 2>&1 | awk '/^  HTTP/{print $2}')
+          if test $STATUSCODE -ne 200; then
+              echo "Error: Could not reach frontend - Status code: ${STATUSCODE}"
+              exit 1
+          fi
+        name: frontend-check
+        image: busybox:latest
+        env:
+        - name: FRONTEND_ADDR
+          value: "frontend:80"
+      containers:
+      - name: main
+        image: gcr.io/google-samples/microservices-demo/loadgenerator:v0.3.6
+        env:
+        - name: FRONTEND_ADDR
+          value: "frontend:80"
+        - name: USERS
+          value: "10"
+        resources:
+          requests:
+            cpu: 300m
+            memory: 256Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+>>>>>>> 2df6b8305cf01533f4c8b48b014b64759ef288ad
   name: currencyservice
 spec:
   selector:
@@ -456,19 +573,23 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
       - name: server
+<<<<<<< HEAD
         image: gcr.io/google-samples/microservices-demo/currencyservice:v0.3.5
+=======
+        image: gcr.io/google-samples/microservices-demo/currencyservice:v0.3.6
+>>>>>>> 2df6b8305cf01533f4c8b48b014b64759ef288ad
         ports:
         - name: grpc
           containerPort: 7000
         env:
         - name: PORT
           value: "7000"
-        # - name: DISABLE_TRACING
-        #   value: "1"
-        # - name: DISABLE_PROFILER
-        #   value: "1"
-        # - name: DISABLE_DEBUGGER
-        #   value: "1"
+        - name: DISABLE_TRACING
+          value: "1"
+        - name: DISABLE_PROFILER
+          value: "1"
+        - name: DISABLE_DEBUGGER
+          value: "1"
         readinessProbe:
           exec:
             command: ["/bin/grpc_health_probe", "-addr=:7000"]
@@ -509,12 +630,17 @@ spec:
       serviceAccountName: default
       containers:
       - name: server
+<<<<<<< HEAD
         image: gcr.io/google-samples/microservices-demo/shippingservice:v0.3.5
+=======
+        image: gcr.io/google-samples/microservices-demo/shippingservice:v0.3.6
+>>>>>>> 2df6b8305cf01533f4c8b48b014b64759ef288ad
         ports:
         - containerPort: 50051
         env:
         - name: PORT
           value: "50051"
+<<<<<<< HEAD
         # - name: DISABLE_STATS
         #   value: "1"
         # - name: DISABLE_TRACING
@@ -523,6 +649,16 @@ spec:
         #   value: "1"
         - name: JAEGER_SERVICE_ADDR
           value: "jaeger-collector:14268"
+=======
+        - name: DISABLE_STATS
+          value: "1"
+        - name: DISABLE_TRACING
+          value: "1"
+        - name: DISABLE_PROFILER
+          value: "1"
+        # - name: JAEGER_SERVICE_ADDR
+        #   value: "jaeger-collector:14268"
+>>>>>>> 2df6b8305cf01533f4c8b48b014b64759ef288ad
         readinessProbe:
           periodSeconds: 5
           exec:
@@ -615,18 +751,31 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
       - name: server
+<<<<<<< HEAD
         image: gcr.io/google-samples/microservices-demo/adservice:v0.3.5
+=======
+        image: gcr.io/google-samples/microservices-demo/adservice:v0.3.6
+>>>>>>> 2df6b8305cf01533f4c8b48b014b64759ef288ad
         ports:
         - containerPort: 9555
         env:
         - name: PORT
           value: "9555"
+<<<<<<< HEAD
         # - name: DISABLE_STATS
         #   value: "1"
         # - name: DISABLE_TRACING
         #   value: "1"
         - name: JAEGER_SERVICE_ADDR
           value: "jaeger-collector:14268"
+=======
+        - name: DISABLE_STATS
+          value: "1"
+        - name: DISABLE_TRACING
+          value: "1"
+        # - name: JAEGER_SERVICE_ADDR
+        #   value: "jaeger-collector:14268"
+>>>>>>> 2df6b8305cf01533f4c8b48b014b64759ef288ad
         resources:
           requests:
             cpu: 601m
