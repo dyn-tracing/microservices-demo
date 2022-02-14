@@ -30,7 +30,7 @@ spec:
       serviceAccountName: default
       containers:
         - name: server
-          image: frontend
+          image: docker.io/jessberg/frontend:1.0.0
           ports:
           - containerPort: 8080
           readinessProbe:
@@ -102,7 +102,7 @@ kind: Service
 metadata:
   name: frontend-external
 spec:
-  type: NodePort
+  type: LoadBalancer
   selector:
     app: frontend
   ports:

@@ -29,7 +29,7 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
       - name: server
-        image: emailservice
+        image: docker.io/jessberg/emailservice:1.0.0
         ports:
         - containerPort: 8080
         env:

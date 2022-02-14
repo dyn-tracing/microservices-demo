@@ -11,25 +11,49 @@ spec:
       labels:
         app: otelcollector
     spec:
-      serviceAccountName: default
-      terminationGracePeriodSeconds: 5
+      # Init container retrieves the current cloud project id from the metadata server
+      # and inserts it into the collector config template
+      # https://cloud.google.com/compute/docs/storing-retrieving-metadata
+      initContainers:
+      - name: otel-gateway-init
+        image: gcr.io/google.com/cloudsdktool/cloud-sdk:326.0.0-alpine
+        command:
+        - '/bin/bash'
+        - '-c'
+        - |
+           sed "s/{{PROJECT_ID}}/$(curl -H 'Metadata-Flavor: Google' http://metadata.google.internal/computeMetadata/v1/project/project-id)/" /template/collector-gateway-config-template.yaml >> /conf/collector-gateway-config.yaml
+        volumeMounts:
+        - name: collector-gateway-config-template
+          mountPath: /template
+        - name: collector-gateway-config
+          mountPath: /conf
       containers:
       - name: otelcollector
-        image: otelcollector
-        ports:
-        - containerPort: 1888
-        - containerPort: 8888
-        - containerPort: 8889
-        - containerPort: 13133
-        - containerPort: 4317
-        - containerPort: 55670
-        resources:
-          requests:
-            cpu: 200m
-            memory: 180Mi
-          limits:
-            cpu: 300m
-            memory: 300Mi
+        args:
+        - --config=/conf/collector-gateway-config.yaml
+        image: jessberg/cloudstoragepermicroservicecollector:latest
+        env:
+          - name: GOOGLE_APPLICATION_CREDENTIALS
+            value: /var/secrets/google/key.json
+        volumeMounts:
+        - name: collector-gateway-config
+          mountPath: /conf
+        - name: google-cloud-key
+          mountPath: /var/secrets/google
+      volumes:
+      # Simple ConfigMap volume with template file
+      - name: collector-gateway-config-template
+        configMap:
+          items:
+          - key: collector-gateway-config-template.yaml
+            path: collector-gateway-config-template.yaml
+          name: collector-gateway-config-template
+      # Create a volume to store the expanded template (with correct cloud project ID)
+      - name: collector-gateway-config
+        emptyDir: {}
+      - name: google-cloud-key
+        secret:
+          secretName: pubsub-key
 ---
 apiVersion: v1
 kind: Service
@@ -58,3 +82,34 @@ spec:
   - name: "55670"
     port: 55670
     targetPort: 55670
+
+---                                                                             
+apiVersion: v1                                                                  
+kind: ConfigMap                                                                 
+metadata:                                                                       
+  name: collector-gateway-config-template                                       
+# Open Telemetry Collector config                                               
+# https://opentelemetry.io/docs/collector/configuration/                        
+data:                                                                           
+  collector-gateway-config-template.yaml: |                                     
+    receivers:                                                                  
+      otlp:                                                                     
+        protocols:                                                              
+          grpc:                                                                 
+    processors:                                                                 
+    exporters:                                                                  
+      logging:                                                                  
+      googlecloudstorage:                                                       
+        #project: {{PROJECT_ID}} TODO:  does this work with {{PROJECT_ID}}?
+        project: dynamic-tracing
+      googlecloudstorage/customname:                                            
+        project: dynamic-tracing                                                
+        user_agent: opentelemetry-collector-contrib {{version}}                 
+        insecure: true                                                          
+        timeout: 20s                                                            
+    service:                                                                    
+      pipelines:                                                                
+        traces:                                                                 
+          receivers: [otlp] # Receive otlp-formatted data from other collector instances
+          processors: []                                                        
+          exporters: [logging, googlecloudstorage, googlecloudstorage/customname] # Export directly to Google Cloud
