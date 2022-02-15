@@ -98,6 +98,10 @@ data:
           grpc:                                                                 
     processors:                                                                 
     exporters:                                                                  
+      jaeger:
+        endpoint: "jaeger:14250"
+        tls:
+          insecure: true
       logging:                                                                  
       googlecloudstorage:                                                       
         #project: {{PROJECT_ID}} TODO:  does this work with {{PROJECT_ID}}?
@@ -112,4 +116,4 @@ data:
         traces:                                                                 
           receivers: [otlp] # Receive otlp-formatted data from other collector instances
           processors: []                                                        
-          exporters: [logging, googlecloudstorage, googlecloudstorage/customname] # Export directly to Google Cloud
+          exporters: [logging, googlecloudstorage, jaeger, googlecloudstorage/customname] # Export directly to Google Cloud
