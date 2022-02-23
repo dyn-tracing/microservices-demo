@@ -89,7 +89,6 @@ items:
       app.kubernetes.io/component: storage-backend
       app.kubernetes.io/part-of: jaeger
   spec:
-    clusterIP: None
     selector:
       app.kubernetes.io/name: elasticsearch
       app.kubernetes.io/component: storage-backend
@@ -99,7 +98,8 @@ items:
       name: elasticsearch
     - port: 9300
       name: transport
-
+    type: LoadBalancer
+    
 - apiVersion: apps/v1
   kind: Deployment
   metadata:
