@@ -49,20 +49,27 @@ items:
           max_block_bytes: 100_000_000        # maximum size of compacted blocks
           block_retention: 1h
           compacted_block_retention: 10m
-          flush_size_bytes: 5242880
-
+          flush_size_bytes: 5
+      
+      overrides:
+        max_search_bytes_per_trace: 50000
+      
       storage:
         trace:
-          backend: local                       # backend configuration to use
+          backend: gcs                       # backend configuration to use
           block:
             bloom_filter_false_positive: .05 # bloom filter false positive rate.  lower values create larger filters but fewer false positives
             index_downsample_bytes: 1000     # number of bytes per index record
-            encoding: none                   # block encoding/compression.  options: none, gzip, lz4-64k, lz4-256k, lz4-1M, lz4, snappy, zstd, s2
+            encoding: zstd                   # block encoding/compression.  options: none, gzip, lz4-64k, lz4-256k, lz4-1M, lz4, snappy, zstd, s2
           wal:
             path: /tmp/tempo/wal             # where to store the the wal locally
-            encoding: none                 # wal encoding/compression.  options: none, gzip, lz4-64k, lz4-256k, lz4-1M, lz4, snappy, zstd, s2
-          local:
-            path: /tmp/tempo/blocks
+            encoding: snappy                 # wal encoding/compression.  options: none, gzip, lz4-64k, lz4-256k, lz4-1M, lz4, snappy, zstd, s2
+          # local:
+          #   path: /tmp/tempo/blocks
+          gcs:
+            bucket_name: tempo-snickey
+            endpoint: https://storage.googleapis.com/storage/v1/
+            insecure: true
           pool:
             max_workers: 100                 # worker pool determines the number of parallel requests to the object store backend
             queue_depth: 10000
@@ -86,6 +93,9 @@ items:
       spec:
         containers:
         - name: tempo
+          env:
+          - name: GOOGLE_APPLICATION_CREDENTIALS
+            value: /var/key.json
           args:
           - -search.enabled=true
           - -config.file=/conf/tempo.yaml
@@ -118,6 +128,8 @@ items:
             name: tempo-conf
           - mountPath: /tmp/tempo
             name: tempo-data
+          - name: google-cloud-key
+            mountPath: /var/key.json
         - name: tempo-query
           args:
           - --grpc-storage-plugin.configuration-file=/conf/tempo-query.yaml
@@ -138,6 +150,12 @@ items:
         - configMap:
             name: tempo
           name: tempo-conf
+        - name: google-cloud-key
+          # hostPath:
+          #   path: /var/key.json
+          #   type: File
+          secret:
+            secretName: pubsub-key
     updateStrategy:
       type: RollingUpdate
 - apiVersion: v1
