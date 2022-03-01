@@ -95,9 +95,13 @@ data:
     receivers:                                                                  
       otlp:                                                                     
         protocols:                                                              
-          grpc:                                                                 
+          grpc:                                                                
     processors:                                                                 
-    exporters:                                                                  
+    exporters:
+      otlp:
+        endpoint: tempo:4317
+        tls:
+          insecure: true                                                                
       jaeger:
         endpoint: jaeger-collector:14250
         tls:
@@ -116,4 +120,4 @@ data:
         traces:                                                                 
           receivers: [otlp] # Receive otlp-formatted data from other collector instances
           processors: []                                                        
-          exporters: [logging, googlecloudstorage, jaeger, googlecloudstorage/customname] # Export directly to Google Cloud
+          exporters: [otlp] # Export directly to Google Cloud
