@@ -43,6 +43,11 @@ items:
         max_block_bytes: 1_000_000           # cut the head block when it hits this size or ...
         max_block_duration: 5m               #   this much time passes
 
+      query_frontend:
+        search:
+          query_backend_after: 1m
+          query_ingesters_until: 1m
+      
       compactor:
         compaction:
           compaction_window: 1h              # blocks in this time window will be compacted together
@@ -67,7 +72,7 @@ items:
           # local:
           #   path: /tmp/tempo/blocks
           gcs:
-            bucket_name: tempo-snickey
+            bucket_name: tempo-snicket
             endpoint: https://storage.googleapis.com/storage/v1/
             insecure: true
           pool:
@@ -168,6 +173,9 @@ items:
   spec:
     type: LoadBalancer
     ports:
+    - name: jaeger-ui
+      port: 16686
+      targetPort: 16686
     - name: tempo-jaeger-thrift-http
       port: 14268
       protocol: TCP
@@ -196,9 +204,6 @@ items:
       port: 55678
       protocol: TCP
       targetPort: 55678
-    - name: jaeger-ui
-      port: 16686
-      targetPort: 16686
     - name: tempo-server
       port: 3200
       targetPort: 3200
