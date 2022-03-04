@@ -96,7 +96,10 @@ data:
       otlp:                                                                     
         protocols:                                                              
           grpc:                                                                 
-    processors:                                                                 
+    processors:
+      groupbytrace/custom:
+        wait_duration: 10s
+        num_traces: 1000
     exporters:                                                                  
       jaeger:
         endpoint: "jaeger:14250"
@@ -115,5 +118,5 @@ data:
       pipelines:                                                                
         traces:                                                                 
           receivers: [otlp] # Receive otlp-formatted data from other collector instances
-          processors: []                                                        
+          processors: [groupbytrace/custom]                                                        
           exporters: [logging, googlecloudstorage, jaeger, googlecloudstorage/customname] # Export directly to Google Cloud
