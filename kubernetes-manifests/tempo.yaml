@@ -52,7 +52,7 @@ items:
         compaction:
           compaction_window: 1h              # blocks in this time window will be compacted together
           max_block_bytes: 100_000_000        # maximum size of compacted blocks
-          flush_size_bytes: 5
+          flush_size_bytes: 5242880
       
       overrides:
         max_search_bytes_per_trace: 50000
