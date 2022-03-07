@@ -43,6 +43,7 @@ spec:
                 value: "shop_session-id=x-readiness-probe"
           livenessProbe:
             initialDelaySeconds: 10
+            periodSeconds: 7200
             httpGet:
               path: "/_healthz"
               port: 8080

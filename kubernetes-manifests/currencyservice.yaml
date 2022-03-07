@@ -44,6 +44,7 @@ spec:
           exec:
             command: ["/bin/grpc_health_probe", "-addr=:7000"]
         livenessProbe:
+          periodSeconds: 7200
           exec:
             command: ["/bin/grpc_health_probe", "-addr=:7000"]
         resources:
