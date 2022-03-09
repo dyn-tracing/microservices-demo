@@ -106,17 +106,16 @@ data:
         tls:
           insecure: true
       logging:                                                                  
-      googlecloudstorage:                                                       
-        #project: {{PROJECT_ID}} TODO:  does this work with {{PROJECT_ID}}?
-        project: dynamic-tracing
       googlecloudstorage/customname:                                            
         project: dynamic-tracing                                                
         user_agent: opentelemetry-collector-contrib {{version}}                 
         insecure: true                                                          
         timeout: 20s                                                            
+        retry_on_failure:
+          enabled: true
     service:                                                                    
       pipelines:                                                                
         traces:                                                                 
           receivers: [otlp] # Receive otlp-formatted data from other collector instances
           processors: [groupbytrace/custom]                                                        
-          exporters: [logging, googlecloudstorage, jaeger, googlecloudstorage/customname]
+          exporters: [jaeger, googlecloudstorage/customname]
