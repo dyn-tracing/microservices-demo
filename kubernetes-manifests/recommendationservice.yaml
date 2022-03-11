@@ -51,11 +51,8 @@ spec:
           value: "service.name=recommendationservice,service.version=1.0.0"
         resources:
           requests:
-            cpu: 100m
-            memory: 220Mi
-          limits:
-            cpu: 200m
-            memory: 450Mi
+            cpu: 601m
+            memory: 2200Mi
 ---
 apiVersion: v1
 kind: Service

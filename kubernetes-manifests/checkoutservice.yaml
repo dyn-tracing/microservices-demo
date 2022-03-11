@@ -58,11 +58,8 @@ spec:
             value: "service.name=checkoutservice,service.version=1.0.0"
           resources:
             requests:
-              cpu: 100m
-              memory: 64Mi
-            limits:
-              cpu: 200m
-              memory: 128Mi
+              cpu: 601m
+              memory: 2200Mi
 ---
 apiVersion: v1
 kind: Service

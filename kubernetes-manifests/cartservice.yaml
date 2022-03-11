@@ -41,11 +41,8 @@ spec:
           value: "service.name=cartservice,service.version=1.0.0"
         resources:
           requests:
-            cpu: 200m
-            memory: 64Mi
-          limits:
-            cpu: 300m
-            memory: 128Mi
+            cpu: 601m
+            memory: 2200Mi
         readinessProbe:
           initialDelaySeconds: 15
           exec:
