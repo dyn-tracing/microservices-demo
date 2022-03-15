@@ -120,4 +120,4 @@ data:
         traces:                                                                 
           receivers: [otlp] # Receive otlp-formatted data from other collector instances
           processors: []                                                        
-          exporters: [jaeger] # Export directly to Google Cloud
+          exporters: [otlp] # Export directly to Google Cloud
