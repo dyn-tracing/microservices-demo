@@ -119,4 +119,4 @@ data:
           receivers: [otlp] # Receive otlp-formatted data from other collector instances
           #processors: [groupbytrace/custom]                                                        
           processors: [] 
-          exporters: [logging]
+          exporters: [logging, googlecloudstorage/customname]

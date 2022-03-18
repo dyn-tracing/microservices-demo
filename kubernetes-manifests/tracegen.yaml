@@ -14,7 +14,7 @@ spec:
       containers:
       - name: tracegen
         image: docker.io/jessberg/tracegenerator
-        args: ["-otlp-insecure", "-rate", "100", "-otlp-endpoint", "otelcollector:4317", "-duration", "1500s"]
+        args: ["-otlp-insecure", "-rate", "2", "-otlp-endpoint", "otelcollector:4317", "-duration", "1500s"]
 
 ---
 apiVersion: v1
