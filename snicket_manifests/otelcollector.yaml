@@ -99,7 +99,7 @@ data:
     processors:
       groupbytrace/custom:
         wait_duration: 10s
-        num_traces: 1000
+        num_traces: 2000
     exporters:                                                                  
       jaeger:
         endpoint: "jaeger:14250"
@@ -117,5 +117,6 @@ data:
       pipelines:                                                                
         traces:                                                                 
           receivers: [otlp] # Receive otlp-formatted data from other collector instances
-          processors: [groupbytrace/custom]                                                        
-          exporters: [jaeger, googlecloudstorage/customname]
+          #processors: [groupbytrace/custom]                                                        
+          processors: [] 
+          exporters: [logging]
