@@ -1,15 +1,15 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: otelcollector
+  name: otelcollector1
 spec:
   selector:
     matchLabels:
-      app: otelcollector
+      app: otelcollector1
   template:
     metadata:
       labels:
-        app: otelcollector
+        app: otelcollector1
     spec:
       # Init container retrieves the current cloud project id from the metadata server
       # and inserts it into the collector config template
@@ -35,12 +35,6 @@ spec:
         env:
           - name: GOOGLE_APPLICATION_CREDENTIALS
             value: /var/secrets/google/key.json
-        resources:
-          requests:
-            cpu: 601m
-            memory: 2200Mi
-          limits:
-            cpu: 800m
         volumeMounts:
         - name: collector-gateway-config
           mountPath: /conf
@@ -64,11 +58,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: otelcollector
+  name: otelcollector1
 spec:
   type: ClusterIP
   selector:
-    app: otelcollector
+    app: otelcollector1
   ports:
   - name: "1888"
     port: 1888
@@ -104,27 +98,20 @@ data:
           grpc:                                                                 
     processors:
       groupbytrace/custom:
-        wait_duration: 300ms
-        num_traces: 1000
-      batch:
-        send_batch_size: 1000
+        wait_duration: 2s
+        num_traces: 2000
     exporters:                                                                  
-      logging:
-      loadbalancing:
-        protocol:
-          otlp:
-            timeout: 1s
-            tls:
-              insecure: true
-        resolver:
-          static:
-            hostnames:  
-              otelbackend
-              otelbackend1
-
+      logging:                                                                  
+      googlecloudstorage/customname:                                            
+        project: dynamic-tracing                                                
+        user_agent: opentelemetry-collector-contrib {{version}}                 
+        insecure: true                                                          
+        timeout: 20s                                                            
+        retry_on_failure:
+          enabled: true
     service:                                                                    
       pipelines:                                                                
         traces:                                                                 
           receivers: [otlp] # Receive otlp-formatted data from other collector instances
-          processors: [groupbytrace/custom, batch]                                                        
-          exporters: [logging, loadbalancing]
+          processors: [groupbytrace/custom]                                                        
+          exporters: [logging, googlecloudstorage/customname]

@@ -1,15 +1,15 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: otelcollector
+  name: otelbackend1
 spec:
   selector:
     matchLabels:
-      app: otelcollector
+      app: otelbackend1
   template:
     metadata:
       labels:
-        app: otelcollector
+        app: otelbackend1
     spec:
       # Init container retrieves the current cloud project id from the metadata server
       # and inserts it into the collector config template
@@ -28,7 +28,7 @@ spec:
         - name: collector-gateway-config
           mountPath: /conf
       containers:
-      - name: otelcollector
+      - name: otelbackend1
         args:
         - --config=/conf/collector-gateway-config.yaml
         image: jessberg/cloudstoragepermicroservicecollector:latest
@@ -64,11 +64,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: otelcollector
+  name: otelbackend1
 spec:
   type: ClusterIP
   selector:
-    app: otelcollector
+    app: otelbackend1
   ports:
   - name: "1888"
     port: 1888
@@ -109,22 +109,26 @@ data:
       batch:
         send_batch_size: 1000
     exporters:                                                                  
-      logging:
-      loadbalancing:
-        protocol:
-          otlp:
-            timeout: 1s
-            tls:
-              insecure: true
-        resolver:
-          static:
-            hostnames:  
-              otelbackend
-              otelbackend1
+      jaeger:
+        endpoint: "jaeger:14250"
+        tls:
+          insecure: true
+      logging:                                                                  
+      googlecloudstorage/customname:                                            
+        project: dynamic-tracing                                                
+        user_agent: opentelemetry-collector-contrib {{version}}                 
+        insecure: true                                                          
+        timeout: 20s                                                            
+        retry_on_failure:
+          enabled: true
+          initial_interval: 5s
+        sending_queue:
+          enabled: true
+          num_consumers: 50
 
     service:                                                                    
       pipelines:                                                                
         traces:                                                                 
           receivers: [otlp] # Receive otlp-formatted data from other collector instances
           processors: [groupbytrace/custom, batch]                                                        
-          exporters: [logging, loadbalancing]
+          exporters: [logging, googlecloudstorage/customname, jaeger]
