@@ -31,7 +31,7 @@ spec:
       - name: otelcollector
         args:
         - --config=/conf/collector-gateway-config.yaml
-        image: jessberg/cloudstoragepermicroservicecollector:latest
+        image: jessberg/cloudstoragepermicroservicecollector:groupbyattr
         env:
           - name: GOOGLE_APPLICATION_CREDENTIALS
             value: /var/secrets/google/key.json
@@ -67,6 +67,9 @@ spec:
   - name: "1888"
     port: 1888
     targetPort: 1888
+  - name: "8080"
+    port: 8080
+    targetPort: 8080
   - name: "8888"
     port: 8888
     targetPort: 8888
@@ -92,26 +95,54 @@ metadata:
 # https://opentelemetry.io/docs/collector/configuration/                        
 data:                                                                           
   collector-gateway-config-template.yaml: |                                     
+    extensions:
+      zpages:
     receivers:                                                                  
       otlp:                                                                     
         protocols:                                                              
           grpc:                                                                 
     processors:
       groupbytrace/custom:
-        wait_duration: 10s
-        num_traces: 2000
+        wait_duration: 1s
+        num_traces: 5000
+        num_workers: 4
+      memory_limiter:
+        check_interval: 1s
+        limit_percentage: 75
+        spike_limit_percentage: 30
+      batch:
+        send_batch_size: 512
+        send_batch_max_size: 1024
+      groupbyattrs:
+
     exporters:                                                                  
-      logging:                                                                  
+      logging:
+      jaeger:
+        endpoint: "jaeger:14250"
+        tls:
+          insecure: true
+        sending_queue:
+          enabled: true
+          num_consumers: 100
+          queue_size: 150000
       googlecloudstorage/customname:                                            
         project: dynamic-tracing                                                
         user_agent: opentelemetry-collector-contrib {{version}}                 
         insecure: true                                                          
-        timeout: 20s                                                            
-        retry_on_failure:
-          enabled: true
+        timeout: 5s                                                             
+        retry_on_failure:                                                       
+          enabled: true                                                         
+          initial_interval: 1s                                                  
+        sending_queue:                                                          
+          enabled: true                                                         
+          num_consumers: 100                                                    
+          queue_size: 10000
+
+
     service:                                                                    
+      extensions: [zpages]
       pipelines:                                                                
         traces:                                                                 
           receivers: [otlp] # Receive otlp-formatted data from other collector instances
-          processors: [groupbytrace/custom]                                                        
-          exporters: [logging, googlecloudstorage/customname]
+          processors: [memory_limiter, groupbytrace/custom, batch, groupbyattrs]
+          exporters: [logging, jaeger, googlecloudstorage/customname]
