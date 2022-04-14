@@ -31,7 +31,8 @@ spec:
       - name: otelcollector
         args:
         - --config=/conf/collector-gateway-config.yaml
-        image: jessberg/cloudstoragepermicroservicecollector:groupbyattr
+        image: jessberg/cloudstoragepermicroservicecollector:latest
+        imagePullPolicy: Always
         env:
           - name: GOOGLE_APPLICATION_CREDENTIALS
             value: /var/secrets/google/key.json
@@ -111,8 +112,9 @@ data:
         limit_percentage: 75
         spike_limit_percentage: 30
       batch:
-        send_batch_size: 512
-        send_batch_max_size: 1024
+        send_batch_size: 5000
+        send_batch_max_size: 10000
+        timeout: 5s
       groupbyattrs:
 
     exporters:                                                                  
@@ -136,7 +138,7 @@ data:
         sending_queue:                                                          
           enabled: true                                                         
           num_consumers: 100                                                    
-          queue_size: 10000
+          queue_size: 1000
 
 
     service:                                                                    
