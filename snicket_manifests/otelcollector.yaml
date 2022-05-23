@@ -100,7 +100,11 @@ data:
       groupbytrace/custom:
         wait_duration: 10s
         num_traces: 2000
-    exporters:                                                                  
+    exporters:
+      jaeger:
+        endpoint: "jaeger:14250"
+        tls:
+          insecure: true                                                                  
       logging:                                                                  
       googlecloudstorage/customname:                                            
         project: dynamic-tracing                                                
@@ -114,4 +118,4 @@ data:
         traces:                                                                 
           receivers: [otlp] # Receive otlp-formatted data from other collector instances
           processors: [groupbytrace/custom]                                                        
-          exporters: [logging, googlecloudstorage/customname]
+          exporters: [jaeger, logging, googlecloudstorage/customname]
